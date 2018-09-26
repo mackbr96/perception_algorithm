@@ -10,9 +10,8 @@ with open("train.txt") as f:
 
 flags = []
 
-for i in range(0, len(vectors) - 1):
+for i in range(0, len(vectors)):
     flags.append(vectors[i].pop())
-    vectors[i].pop()
     for x in range(0,len(vectors[i])):
         vectors[i][x] = float(vectors[i][x])
 
@@ -25,8 +24,9 @@ else:
 
 vec = np.array(vectors)
 no = np.array(normalVector)
+no = no / linalg.norm(no)
 
-for i in range(0, len(vectors) - 1):
+for i in range(0, len(vectors)):
     if(flags[i] == "Y"):
         if(np.inner(no, vec[i]) >= 0):
             continue
@@ -41,7 +41,7 @@ for i in range(0, len(vectors) - 1):
             normal = vec[i] / linalg.norm(vec[i])
             no = no + (-1 * normal)
             i = 0
-
+print(no)
 print("FINISHED LEARNING")
 print("NOW TESTING")
 
@@ -51,21 +51,24 @@ with open("test.txt") as f:
     for i in lines:
         vectors.append(i.split())
 
-flags = []
 
-for i in range(0, len(vectors) - 1):
-    flags.append(vectors[i].pop())
-    vectors[i].pop()
+for i in range(0, len(vectors) ):
     for x in range(0,len(vectors[i])):
         vectors[i][x] = float(vectors[i][x])
 
 
 vec = np.array(vectors)
 
+solution = []
 
-for i in range(0, len(vectors) - 1):
-    if()
+for i in range(0, len(vectors)):
+    if(np.inner(no, vec[i]) >= 0):
+        solution.append("Y")
+    else:
+        solution.append("N") 
 
+
+print(solution)
 print("Finished")
 
 
