@@ -1,6 +1,6 @@
 import numpy as np
 from numpy import linalg
-normalVector = []
+
 def train():
     with open("train.txt") as f:
         lines = f.readlines()
