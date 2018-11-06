@@ -8,40 +8,44 @@ def train():
         for i in lines:
             vectors.append(i.split())
 
-    flags = [] #Y or N
+    labels = [] #Y or N
 
     for i in range(0, len(vectors)): #remove flag from vector and convert string to float
-        flags.append(vectors[i].pop())
+        labels.append(vectors[i].pop())
         for x in range(0,len(vectors[i])):
             vectors[i][x] = float(vectors[i][x])
 
-    #set up first normal vector
-    if(flags[0] == "Y"):
-        normalVector = vectors[0] / linalg.norm(vectors[0])
-    else:
-        normalVector = vectors[0] / linalg.norm(vectors[0])*-1
-
     vec = np.array(vectors)
 
-    for i in range(0, len(vectors)):
-        if(flags[i] == "Y"): #Yes side
+    if(labels[0] == "Y"):
+        normalVector = vec[0] / linalg.norm(vectors[0])
+    else:
+        normalVector = vec[0] / linalg.norm(vectors[0])*-1
+
+    i = -1
+    while(i < len(vec) - 1):
+        i += 1
+        if(labels[i] == "Y"): #Yes side
             if(np.inner(normalVector, vec[i]) >= 0): #Is good
                 continue
             else: #Its on the wrong side
                 normal = vec[i] / linalg.norm(vec[i])
-                normalVector= normalVector + (normal)
-                i = 0
-        else: #No side
+                normalVector= np.add(normalVector, normal)
+                i = -1
+        elif(labels[i] == "N"): #No side
             if(np.inner(normalVector, vec[i]) < 0): #Is good
                 continue
             else: #Is incorrect
                 normal = vec[i] / linalg.norm(vec[i])
-                normalVector= normalVector + (-1 * normal)
-                i = 0
-    return normalVector
+                normalVector= np.add(normalVector, (-1 * normal))
+                i = -1
+        else:
+            continue
+    return normalVector, labels
+
 
 def test(normalVector):
-    with open("test.txt") as f:
+    with open("tester.txt") as f:
         lines = f.readlines()
         vectors = []
         for i in lines:
@@ -64,13 +68,22 @@ def test(normalVector):
 
 
 
-normalVector = train()
+normalVector,labels = train()
 
 print(normalVector)
 print("FINISHED LEARNING")
 print("NOW TESTING")
+wrong = 0
+right = 0
 
 predictions = test(normalVector)
+for i in range(0, len(predictions)):
+    if predictions[i] != labels[i]:
+        wrong += 1
+    else:
+        right += 1
 
-print(predictions)
+print("Right " + str(right))
+print("Wrong " + str(wrong))
+#print(predictions)
 print("Finished")
