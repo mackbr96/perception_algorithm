@@ -10,7 +10,7 @@ def train():
 
     labels = [] #Y or N
 
-    for i in range(0, len(vectors)): #remove flag from vector and convert string to float
+    for i in range(0, len(vectors)): #remove label from vector and convert string to float
         labels.append(vectors[i].pop())
         for x in range(0,len(vectors[i])):
             vectors[i][x] = float(vectors[i][x])
@@ -83,6 +83,10 @@ for i in range(0, len(predictions)):
     else:
         right += 1
 
+# with open("normalVec.txt", "w") as f:
+#     f.write(normalVector)
+#     f.close()
+np.savetxt("normalVec.txt", normalVector)
 print("Right " + str(right))
 print("Wrong " + str(wrong))
 #print(predictions)
